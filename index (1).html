@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drive2School</title>
+<style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #101827; }
+#app { min-height: 100vh; background-color: light-dark(#f4f7fb, #0f1725); color: light-dark(#162033, #f2f6ff); }
+header { background: light-dark(#ffffff, #172235); border-bottom: 1px solid light-dark(#dce3ed, #29364b); padding: 18px 28px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.brand { display:flex; align-items:center; gap:12px; font-weight:800; font-size:21px; }
+.logo { width:42px; height:42px; border-radius:13px; display:grid; place-items:center; background:#315efb; color:white; font-size:22px; }
+.badge { padding:7px 11px; border-radius:999px; background:light-dark(#eaf0ff,#202e49); color:#315efb; font-size:12px; font-weight:700; }
+main { max-width:1100px; margin:auto; padding:28px; }
+.hero { display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:22px; }
+h1 { margin:0 0 7px; font-size:clamp(28px,4vw,42px); letter-spacing:-1px; }
+.sub { margin:0; color:light-dark(#637086,#a9b5c9); }
+.grid { display:grid; grid-template-columns:1.35fr .85fr; gap:18px; }
+.card { background:light-dark(#fff,#172235); border:1px solid light-dark(#dce3ed,#29364b); border-radius:22px; padding:22px; box-shadow:0 8px 30px rgba(20,35,60,.06); }
+.card h2 { margin:0 0 16px; font-size:17px; }
+.map { height:270px; border-radius:17px; background:linear-gradient(145deg,#e8f0ff,#f7fbff); position:relative; overflow:hidden; border:1px solid #d6e0ef; }
+.road { position:absolute; height:13px; background:#c6d0de; border-radius:20px; transform:rotate(-17deg); width:125%; left:-8%; top:46%; }
+.road.r2 { transform:rotate(31deg); top:55%; background:#d1dae6; }
+.road.r3 { transform:rotate(-4deg); top:70%; background:#dbe3ec; height:9px; }
+.route { position:absolute; height:5px; background:#315efb; border-radius:10px; width:76%; left:12%; top:51%; transform:rotate(-17deg); box-shadow:0 0 0 4px rgba(49,94,251,.12); }
+.pin { position:absolute; width:25px; height:25px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:grid; place-items:center; color:white; font-size:11px; font-weight:800; }
+.pin span { transform:rotate(45deg); }
+.pin.home { left:13%; top:65%; background:#19a974; }
+.pin.school { right:13%; top:23%; background:#f06b38; }
+.car { position:absolute; left:50%; top:49%; transform:translate(-50%,-50%); background:#315efb; color:white; padding:8px 12px; border-radius:12px; font-size:18px; box-shadow:0 8px 20px rgba(49,94,251,.28); }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+.stat { background:light-dark(#f7f9fc,#111b2b); border-radius:15px; padding:14px; }
+.stat strong { display:block; font-size:20px; margin-bottom:3px; }
+.stat small { color:light-dark(#69768a,#a9b5c9); }
+.timeline { display:flex; flex-direction:column; gap:16px; }
+.stop { display:grid; grid-template-columns:28px 1fr auto; gap:12px; align-items:center; }
+.dot { width:12px; height:12px; border-radius:50%; background:#315efb; box-shadow:0 0 0 5px rgba(49,94,251,.12); margin-left:5px; }
+.stop:first-child .dot { background:#19a974; }
+.stop:last-child .dot { background:#f06b38; }
+.stop strong { display:block; font-size:14px; }
+.stop span { color:light-dark(#758197,#a9b5c9); font-size:12px; }
+.time { font-weight:750; font-size:13px; }
+.safety { display:flex; align-items:flex-start; gap:12px; padding:14px; border-radius:15px; background:light-dark(#eefaf5,#10271f); margin-bottom:14px; }
+.safety b { display:block; margin-bottom:3px; }
+.safety p { margin:0; font-size:12px; color:light-dark(#647567,#a9c7b8); line-height:1.45; }
+button { border:0; border-radius:12px; padding:11px 15px; font-weight:750; cursor:pointer; background:#315efb; color:white; }
+button.secondary { background:light-dark(#edf1f7,#26344a); color:light-dark(#263247,#e7edf8); }
+.actions { display:flex; gap:9px; margin-top:17px; flex-wrap:wrap; }
+.notice { margin-top:18px; padding:14px 16px; border-radius:15px; background:light-dark(#fff7e8,#2a2418); color:light-dark(#755b22,#e8ca83); font-size:13px; }
+@media(max-width:800px){ .grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.map{height:230px} }
+</style>
+</head>
+<body>
+<div id="app">
+<header><div class="brand"><div class="logo">🚗</div> Drive2School</div><div class="badge">● Autonomous shuttle online</div></header>
+<main>
+<section class="hero"><div><h1>Good morning, Alex 👋</h1><p class="sub">Your school ride is ready. Here’s today’s trip at a glance.</p></div><button id="shareBtn">Share trip status</button></section>
+<div class="grid">
+<section class="card">
+<h2>Today’s route</h2>
+<div class="map" aria-label="Illustrated route from home to school"><div class="road"></div><div class="road r2"></div><div class="road r3"></div><div class="route"></div><div class="pin home"><span>H</span></div><div class="pin school"><span>S</span></div><div class="car">🚐</div></div>
+<div class="stats"><div class="stat"><strong id="eta">8 min</strong><small>Estimated arrival</small></div><div class="stat"><strong>3.2 mi</strong><small>Trip distance</small></div><div class="stat"><strong>7:42 AM</strong><small>School arrival</small></div></div>
+<div class="actions"><button id="detailBtn">View ride details</button><button class="secondary" id="alertBtn">Contact school</button></div>
+<div class="notice" id="notice">The shuttle is currently on schedule and following its assigned student route.</div>
+<div class="notice" style="background:light-dark(#eef6ff,#14243a);color:light-dark(#36506f,#b9d4f2)"><strong>🔒 Student privacy</strong><br>Only information needed for transportation should be used. This prototype has no backend and does not collect or send real student data. A production version should use guardian consent, access controls, encryption, limited data retention, and clear deletion policies.</div>
+</section>
+<section class="card"><h2>Pickup timeline</h2><div class="timeline">
+<div class="stop"><div class="dot"></div><div><strong>Shuttle departs</strong><span>Route begins</span></div><div class="time">7:30 AM</div></div>
+<div class="stop"><div class="dot"></div><div><strong>Neighborhood pickup</strong><span>Student boarding</span></div><div class="time">7:34 AM</div></div>
+<div class="stop"><div class="dot"></div><div><strong>School arrival</strong><span>Main student entrance</span></div><div class="time">7:42 AM</div></div>
+</div>
+<div style="height:1px;background:light-dark(#e1e6ee,#2b394e);margin:22px 0"></div>
+<h2>Safety checks</h2>
+<div class="safety"><div>🛡️</div><div><b>Route monitoring</b><p>Vehicle and route status are being monitored throughout the trip.</p></div></div>
+<div class="safety"><div>🪪</div><div><b>Student check-in</b><p>Boarding can be confirmed before the shuttle leaves each stop.</p></div></div>
+<div class="safety"><div>📍</div><div><b>Live location</b><p>Authorized guardians can view the shuttle’s trip status.</p></div></div>
+</section>
+</div>
+</main>
+</div>
+<script>
+const notice=document.getElementById('notice');
+document.getElementById('shareBtn').onclick=()=>{notice.textContent='Trip status copied: Shuttle on schedule • ETA 8 min • School arrival 7:42 AM';};
+document.getElementById('detailBtn').onclick=()=>{notice.textContent='Ride details: Autonomous shuttle • 4 student stops • Assigned route active • Arrival estimate 7:42 AM';};
+document.getElementById('alertBtn').onclick=()=>{notice.textContent='School contact option opened. In a production app, this would connect to the school transportation office.';};
+</script>
+</body>
+</html>
